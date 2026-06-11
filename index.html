@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evidence práce</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F7F7F5;
+    --bg2: #EFEFEC;
+    --surface: #FFFFFF;
+    --border: #E0DED8;
+    --border2: #CCCBC5;
+    --text: #1A1A18;
+    --text2: #6B6B66;
+    --text3: #9B9B95;
+    --green: #1D9E75;
+    --green-dark: #0F6E56;
+    --green-bg: #E8F7F2;
+    --red: #D85A30;
+    --red-bg: #FAECE7;
+    --radius: 10px;
+    --radius-sm: 7px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .app { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+  /* SCREEN */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* TOPNAV */
+  .topnav {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 1.5rem; padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .topnav-title { font-size: 16px; font-weight: 600; flex: 1; }
+  .back-btn {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 13px; color: var(--text2); cursor: pointer;
+    border: none; background: none; padding: 0;
+  }
+  .back-btn:hover { color: var(--text); }
+  .back-btn svg { width: 16px; height: 16px; }
+
+  /* HERO */
+  .hero { text-align: center; padding: 2rem 0 1.5rem; }
+  .hero h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+  .hero p { font-size: 14px; color: var(--text2); }
+
+  /* TABS */
+  .tabs {
+    display: flex; gap: 4px;
+    background: var(--bg2); border-radius: var(--radius);
+    padding: 4px; margin-bottom: 1.5rem;
+  }
+  .tab {
+    flex: 1; padding: 8px 12px; font-size: 14px; font-weight: 500;
+    cursor: pointer; border: none; background: none;
+    color: var(--text2); border-radius: var(--radius-sm);
+    transition: background 0.15s, color 0.15s;
+  }
+  .tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+
+  .tabcontent { display: none; }
+  .tabcontent.active { display: block; }
+
+  /* ADMIN TABS */
+  .admin-tabs {
+    display: flex; gap: 4px; flex-wrap: wrap;
+    background: var(--bg2); border-radius: var(--radius);
+    padding: 4px; margin-bottom: 1.5rem;
+  }
+  .admin-tab {
+    flex: 1; min-width: 80px; padding: 8px 10px; font-size: 13px; font-weight: 500;
+    cursor: pointer; border: none; background: none;
+    color: var(--text2); border-radius: var(--radius-sm);
+    transition: background 0.15s, color 0.15s; text-align: center;
+  }
+  .admin-tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .admin-content { display: none; }
+  .admin-content.active { display: block; }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 12px;
+  }
+  .section-title { font-size: 15px; font-weight: 600; margin-bottom: 1rem; }
+
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .04em; }
+  .form-group input,
+  .form-group select {
+    font-size: 14px; width: 100%;
+    background: var(--bg); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); padding: 8px 10px;
+    color: var(--text); outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus,
+  .form-group select:focus { border-color: var(--green); }
+
+  .field-err input, .field-err select { border-color: var(--red) !important; }
+  .err { font-size: 12px; color: var(--red); display: none; }
+  .field-err .err { display: block; }
+
+  /* DURATION */
+  .dur-display {
+    font-size: 13px; color: var(--text2);
+    padding: 9px 12px; background: var(--bg2);
+    border-radius: var(--radius-sm); text-align: center;
+    border: 1px solid var(--border);
+  }
+  .dur-val { font-size: 16px; font-weight: 600; color: var(--text); }
+
+  /* BUTTONS */
+  .btn-row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+  .btn {
+    padding: 9px 20px; font-size: 14px; font-weight: 500;
+    border-radius: var(--radius-sm); border: 1px solid var(--border2);
+    cursor: pointer; background: var(--bg2); color: var(--text2);
+    transition: background 0.15s;
+  }
+  .btn:hover { background: var(--bg); color: var(--text); }
+  .btn.primary {
+    background: var(--green); border-color: var(--green-dark);
+    color: #fff;
+  }
+  .btn.primary:hover { background: var(--green-dark); }
+  .btn-sm {
+    padding: 4px 10px; font-size: 12px; font-weight: 500;
+    border-radius: var(--radius-sm); border: 1px solid var(--border);
+    cursor: pointer; background: var(--bg2); color: var(--text2);
+  }
+  .btn-sm:hover { background: var(--bg); }
+  .btn-sm.danger { color: var(--red); border-color: transparent; }
+  .btn-sm.copy { color: var(--text2); border-color: transparent; }
+
+  /* STATS */
+  .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .metric {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px; text-align: center;
+  }
+  .metric-val { font-size: 22px; font-weight: 700; color: var(--text); }
+  .metric-lbl { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  /* FILTERS */
+  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
+  .filter-row select, .filter-row input {
+    font-size: 13px; padding: 6px 10px;
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); color: var(--text); outline: none;
+  }
+  .filter-row select:focus, .filter-row input:focus { border-color: var(--green); }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+  th {
+    text-align: left; font-size: 11px; font-weight: 700;
+    color: var(--text2); text-transform: uppercase; letter-spacing: .05em;
+    padding: 9px 10px; border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+  td {
+    padding: 9px 10px; border-bottom: 1px solid var(--border);
+    color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg); }
+
+  .badge {
+    display: inline-block; padding: 2px 9px;
+    border-radius: 20px; font-size: 11px; font-weight: 600;
+  }
+
+  /* LIST */
+  .list-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .list-item:last-child { border-bottom: none; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+
+  /* AVATAR */
+  .avatar {
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-weight: 700; flex-shrink: 0;
+  }
+
+  /* WORKER GRID */
+  .worker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1rem; }
+  .worker-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.25rem 1rem;
+    cursor: pointer; display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .worker-card:hover { border-color: var(--green); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+  .worker-name { font-size: 14px; font-weight: 600; text-align: center; }
+  .worker-meta { font-size: 12px; color: var(--text2); }
+
+  /* URL BOX */
+  .url-box {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 5px 10px;
+    font-size: 12px; color: var(--text2); max-width: 280px;
+  }
+  .url-box span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* EMPTY / NOT FOUND */
+  .empty { text-align: center; color: var(--text2); padding: 2.5rem; font-size: 14px; }
+  .not-found { text-align: center; padding: 4rem 1rem; }
+  .not-found .icon { font-size: 48px; margin-bottom: 16px; }
+  .not-found h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .not-found p { font-size: 14px; color: var(--text2); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 20px; right: 20px;
+    background: var(--text); color: #fff;
+    padding: 10px 18px; border-radius: var(--radius-sm);
+    font-size: 13px; font-weight: 500; z-index: 999;
+    animation: slideUp .2s ease;
+  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* PASS SCREEN */
+  .pass-wrap { max-width: 340px; margin: 0 auto; }
+
+  @media (max-width: 480px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .meta-grid { grid-template-columns: repeat(3,1fr); }
+    .url-box { max-width: 180px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- 404 -->
+  <div id="scr-notfound" class="screen">
+    <div class="not-found">
+      <div class="icon">🔍</div>
+      <h2>Pracovník nenalezen</h2>
+      <p id="notfound-msg">Odkaz neodpovídá žádnému pracovníkovi.</p>
+    </div>
+  </div>
+
+  <!-- PŘIHLÁŠENÍ SPRÁVCE -->
+  <div id="scr-admin-login" class="screen">
+    <div class="hero">
+      <h1>Evidence práce</h1>
+      <p>Přihlaste se jako správce</p>
+    </div>
+    <div class="card pass-wrap">
+      <div class="form-group">
+        <label>Heslo správce</label>
+        <input type="password" id="admin-pass-input" placeholder="Heslo…"
+          oninput="clearAdminErr()" onkeydown="if(event.key==='Enter')loginAdmin()">
+        <span class="err" id="admin-pass-err">Nesprávné heslo</span>
+      </div>
+      <div class="btn-row" style="margin-top:14px">
+        <button class="btn primary" onclick="loginAdmin()">Přihlásit se</button>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text2)">Výchozí heslo: <code>1234</code></div>
+    </div>
+  </div>
+
+  <!-- PRACOVNÍK -->
+  <div id="scr-worker" class="screen">
+    <div class="topnav">
+      <div class="avatar" id="worker-avatar" style="width:34px;height:34px;font-size:13px;margin-right:2px"></div>
+      <div class="topnav-title" id="worker-screen-title"></div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchWorkerTab('entry')">Zadat čas</button>
+      <button class="tab" onclick="switchWorkerTab('log')">Moje záznamy</button>
+    </div>
+
+    <!-- Zadat čas -->
+    <div id="wtab-entry" class="tabcontent active">
+      <div class="card">
+        <div class="section-title">Nový záznam</div>
+        <div class="form-grid">
+          <div class="form-group" id="wfg-project">
+            <label>Projekt</label>
+            <select id="went-project" oninput="clearErr('wfg-project')"></select>
+            <span class="err">Vyberte projekt</span>
+          </div>
+          <div class="form-group" id="wfg-date">
+            <label>Datum</label>
+            <input type="date" id="went-date" oninput="clearErr('wfg-date')">
+            <span class="err">Zadejte datum</span>
+          </div>
+          <div class="form-group" id="wfg-start">
+            <label>Začátek</label>
+            <input type="time" id="went-start" oninput="wCalcDur();clearErr('wfg-start')">
+            <span class="err">Zadejte čas začátku</span>
+          </div>
+          <div class="form-group" id="wfg-end">
+            <label>Konec</label>
+            <input type="time" id="went-end" oninput="wCalcDur();clearErr('wfg-end')">
+            <span class="err">Konec musí být po začátku</span>
+          </div>
+          <div class="form-group full">
+            <label>&nbsp;</label>
+            <div class="dur-display" id="wdur-display">Trvání: <span class="dur-val">—</span></div>
+          </div>
+          <div class="form-group full" id="wfg-prace">
+            <label>Práce</label>
+            <input type="text" id="went-note" placeholder="Popis vykonané práce…" oninput="clearErr('wfg-prace')">
+            <span class="err">Pole Práce je povinné</span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="wClearForm()">Vymazat</button>
+          <button class="btn primary" onclick="wSaveEntry()">Uložit záznam</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Moje záznamy -->
+    <div id="wtab-log" class="tabcontent">
+      <div class="meta-grid">
+        <div class="metric"><div class="metric-val" id="wstat-entries">0</div><div class="metric-lbl">Záznamy</div></div>
+        <div class="metric"><div class="metric-val" id="wstat-hours">0h</div><div class="metric-lbl">Celkem hodin</div></div>
+        <div class="metric"><div class="metric-val" id="wstat-projects">0</div><div class="metric-lbl">Projekty</div></div>
+      </div>
+      <div class="filter-row">
+        <input type="month" id="wfilter-month" onchange="renderWorkerLog()">
+        <select id="wfilter-project" onchange="renderWorkerLog()"><option value="">Všechny projekty</option></select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <colgroup><col style="width:90px"><col style="width:95px"><col style="width:58px"><col style="width:58px"><col style="width:65px"><col></colgroup>
+          <thead><tr><th>Datum</th><th>Projekt</th><th>Začátek</th><th>Konec</th><th>Trvání</th><th>Práce</th></tr></thead>
+          <tbody id="wlog-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPRÁVCE -->
+  <div id="scr-admin" class="screen">
+    <div class="topnav">
+      <button class="back-btn" onclick="showScreen('scr-admin-login')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Odhlásit
+      </button>
+      <div class="topnav-title">Správce</div>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdminTab('workers')">Pracovníci</button>
+      <button class="admin-tab" onclick="switchAdminTab('projects')">Projekty</button>
+      <button class="admin-tab" onclick="switchAdminTab('log')">Přehled</button>
+      <button class="admin-tab" onclick="switchAdminTab('export')">Export</button>
+    </div>
+
+    <!-- PRACOVNÍCI -->
+    <div id="atab-workers" class="admin-content active">
+      <div class="card">
+        <div class="section-title">Přidat pracovníka</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Jméno</label><input type="text" id="new-worker" placeholder="Jméno pracovníka…"></div>
+          <div class="form-group"><label>Barva avatara</label>
+            <select id="worker-color">
+              <option value="#1D9E75">Zelená</option>
+              <option value="#378ADD">Modrá</option>
+              <option value="#D85A30">Oranžová</option>
+              <option value="#BA7517">Žlutá</option>
+              <option value="#533AB7">Fialová</option>
+              <option value="#639922">Světle zelená</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn primary" onclick="addWorker()">Přidat pracovníka</button></div>
+      </div>
+      <div class="card" id="admin-worker-list"><div class="empty">Žádní pracovníci</div></div>
+    </div>
+
+    <!-- PROJEKTY -->
+    <div id="atab-projects" class="admin-content">
+      <div class="card">
+        <div class="section-title">Přidat projekt</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Název</label><input type="text" id="new-project" placeholder="Název projektu…"></div>
+          <div class="form-group"><label>Barva</label>
+            <select id="proj-color">
+              <option value="#1D9E75">Zelená</option>
+              <option value="#378ADD">Modrá</option>
+              <option value="#D85A30">Oranžová</option>
+              <option value="#BA7517">Žlutá</option>
+              <option value="#533AB7">Fialová</option>
+              <option value="#639922">Světle zelená</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn primary" onclick="addProject()">Přidat projekt</button></div>
+      </div>
+      <div class="card" id="project-list"><div class="empty">Žádné projekty</div></div>
+    </div>
+
+    <!-- PŘEHLED -->
+    <div id="atab-log" class="admin-content">
+      <div class="meta-grid">
+        <div class="metric"><div class="metric-val" id="astat-entries">0</div><div class="metric-lbl">Záznamy</div></div>
+        <div class="metric"><div class="metric-val" id="astat-hours">0h</div><div class="metric-lbl">Celkem hodin</div></div>
+        <div class="metric"><div class="metric-val" id="astat-projects">0</div><div class="metric-lbl">Projekty</div></div>
+      </div>
+      <div class="filter-row">
+        <select id="afilter-worker" onchange="renderAdminLog()"><option value="">Všichni pracovníci</option></select>
+        <select id="afilter-project" onchange="renderAdminLog()"><option value="">Všechny projekty</option></select>
+        <input type="month" id="afilter-month" onchange="renderAdminLog()">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <colgroup><col style="width:88px"><col style="width:82px"><col style="width:90px"><col style="width:58px"><col style="width:58px"><col style="width:65px"><col><col style="width:34px"></colgroup>
+          <thead><tr><th>Datum</th><th>Pracovník</th><th>Projekt</th><th>Začátek</th><th>Konec</th><th>Trvání</th><th>Práce</th><th></th></tr></thead>
+          <tbody id="alog-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div id="atab-export" class="admin-content">
+      <div class="card">
+        <div class="section-title">Export do CSV</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Pracovník</label><select id="exp-worker"><option value="">Všichni</option></select></div>
+          <div class="form-group"><label>Projekt</label><select id="exp-project"><option value="">Všechny</option></select></div>
+          <div class="form-group"><label>Od</label><input type="date" id="exp-from"></div>
+          <div class="form-group"><label>Do</label><input type="date" id="exp-to"></div>
+        </div>
+        <div class="btn-row"><button class="btn primary" onclick="exportCSV()">Stáhnout CSV</button></div>
+      </div>
+      <div class="card" id="exp-info" style="font-size:13px;color:var(--text2)">Nastavte filtry a stáhněte soubor.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ADMIN_PASS = '1234';
+let currentWorker = null;
+let data = JSON.parse(localStorage.getItem('evidence-prace') || JSON.stringify({ workers: [], projects: [], log: [] }));
+
+function save() { localStorage.setItem('evidence-prace', JSON.stringify(data)); }
+function fmtDate(d) { const p = d.split('-'); return `${p[2]}.${p[1]}.${p[0]}`; }
+function minToHM(m) { const h = Math.floor(m/60), mn = m%60; return h > 0 ? (mn > 0 ? `${h}h ${mn}min` : `${h}h`) : `${mn}min`; }
+function timeToMin(t) { const [h,m] = t.split(':').map(Number); return h*60+m; }
+function initials(n) { return n.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2); }
+function slugify(n) { return encodeURIComponent(n.trim().toLowerCase().replace(/\s+/g, '-')); }
+function workerUrl(name) { return window.location.href.split('?')[0].split('#')[0] + '?worker=' + slugify(name); }
+function getParam(k) { return new URLSearchParams(window.location.search).get(k); }
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function clearErr(id) {
+  const el = document.getElementById(id); if (!el) return;
+  el.classList.remove('field-err');
+}
+function showErr(id) {
+  const el = document.getElementById(id); if (!el) return;
+  el.classList.add('field-err');
+}
+
+function toast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 2200);
+}
+
+/* ---- ROUTING ---- */
+function init() {
+  const adminParam = getParam('admin');
+  const workerParam = getParam('worker');
+  if (adminParam !== null) {
+    showScreen('scr-admin-login');
+  } else if (workerParam !== null) {
+    const worker = data.workers.find(w => slugify(w.name) === workerParam.toLowerCase());
+    if (!worker) {
+      document.getElementById('notfound-msg').textContent = `Odkaz „?worker=${workerParam}" neodpovídá žádnému pracovníkovi.`;
+      showScreen('scr-notfound');
+    } else {
+      enterWorker(worker.name);
+    }
+  } else {
+    showScreen('scr-admin-login');
+  }
+}
+
+/* ---- WORKER ---- */
+function enterWorker(name) {
+  currentWorker = name;
+  const w = data.workers.find(x => x.name === name);
+  const col = w ? w.color : '#1D9E75';
+  document.getElementById('worker-screen-title').textContent = name;
+  const av = document.getElementById('worker-avatar');
+  av.style.background = col + '22'; av.style.color = col; av.textContent = initials(name);
+  document.getElementById('went-date').value = new Date().toISOString().split('T')[0];
+  const sel = document.getElementById('went-project');
+  sel.innerHTML = ''; data.projects.forEach(p => sel.innerHTML += `<option value="${p.name}">${p.name}</option>`);
+  const wf = document.getElementById('wfilter-project');
+  wf.innerHTML = '<option value="">Všechny projekty</option>';
+  data.projects.forEach(p => wf.innerHTML += `<option value="${p.name}">${p.name}</option>`);
+  switchWorkerTab('entry');
+  showScreen('scr-worker');
+}
+
+function switchWorkerTab(id) {
+  document.querySelectorAll('#scr-worker .tab').forEach((t,i) => t.classList.toggle('active', ['entry','log'][i] === id));
+  document.querySelectorAll('.tabcontent').forEach(t => t.classList.remove('active'));
+  document.getElementById('wtab-' + id).classList.add('active');
+  if (id === 'log') renderWorkerLog();
+}
+
+function wCalcDur() {
+  const s = document.getElementById('went-start').value, e = document.getElementById('went-end').value;
+  const d = document.getElementById('wdur-display');
+  if (s && e) {
+    const sm = timeToMin(s), em = timeToMin(e);
+    if (em <= sm) { d.innerHTML = 'Trvání: <span class="dur-val" style="color:var(--red)">—</span>'; return; }
+    d.innerHTML = `Trvání: <span class="dur-val">${minToHM(em-sm)}</span>`;
+  } else d.innerHTML = 'Trvání: <span class="dur-val">—</span>';
+}
+
+function wSaveEntry() {
+  const p = document.getElementById('went-project').value;
+  const d = document.getElementById('went-date').value;
+  const s = document.getElementById('went-start').value;
+  const e = document.getElementById('went-end').value;
+  const n = document.getElementById('went-note').value.trim();
+  let ok = true;
+  if (!p) { showErr('wfg-project'); ok = false; }
+  if (!d) { showErr('wfg-date'); ok = false; }
+  if (!s) { showErr('wfg-start'); ok = false; }
+  if (!e || timeToMin(e) <= timeToMin(s)) { showErr('wfg-end'); ok = false; }
+  if (!n) { showErr('wfg-prace'); ok = false; }
+  if (!ok) return;
+  data.log.push({ worker: currentWorker, project: p, date: d, start: s, end: e, note: n });
+  data.log.sort((a,b) => a.date < b.date ? 1 : -1);
+  save(); wClearForm(); toast('Záznam uložen ✓');
+}
+
+function wClearForm() {
+  document.getElementById('went-start').value = '';
+  document.getElementById('went-end').value = '';
+  document.getElementById('went-note').value = '';
+  ['wfg-project','wfg-date','wfg-start','wfg-end','wfg-prace'].forEach(clearErr);
+  wCalcDur();
+}
+
+function renderWorkerLog() {
+  const fm = document.getElementById('wfilter-month').value;
+  const fp = document.getElementById('wfilter-project').value;
+  const entries = data.log.filter(e => e.worker === currentWorker && (!fm || e.date.startsWith(fm)) && (!fp || e.project === fp));
+  const tbody = document.getElementById('wlog-body');
+  if (!entries.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">Žádné záznamy</td></tr>';
+    ['wstat-entries','wstat-hours','wstat-projects'].forEach(id => document.getElementById(id).textContent = '0'); return;
+  }
+  tbody.innerHTML = entries.map(e => {
+    const proj = data.projects.find(x => x.name === e.project), col = proj ? proj.color : '#888';
+    return `<tr><td>${fmtDate(e.date)}</td><td><span class="badge" style="background:${col}22;color:${col}">${e.project}</span></td><td>${e.start}</td><td>${e.end}</td><td>${minToHM(timeToMin(e.end)-timeToMin(e.start))}</td><td style="color:var(--text2)">${e.note}</td></tr>`;
+  }).join('');
+  const totalMin = entries.reduce((s,e) => s + timeToMin(e.end) - timeToMin(e.start), 0);
+  document.getElementById('wstat-entries').textContent = entries.length;
+  document.getElementById('wstat-hours').textContent = minToHM(totalMin);
+  document.getElementById('wstat-projects').textContent = new Set(entries.map(e => e.project)).size;
+}
+
+/* ---- ADMIN ---- */
+function clearAdminErr() {
+  document.getElementById('admin-pass-err').style.display = 'none';
+  document.getElementById('admin-pass-input').style.borderColor = '';
+}
+function loginAdmin() {
+  if (document.getElementById('admin-pass-input').value !== ADMIN_PASS) {
+    document.getElementById('admin-pass-err').style.display = 'block';
+    document.getElementById('admin-pass-input').style.borderColor = 'var(--red)'; return;
+  }
+  document.getElementById('admin-pass-input').value = '';
+  populateAdminSelects(); renderAdminWorkers(); renderProjects(); switchAdminTab('workers'); showScreen('scr-admin');
+}
+
+function switchAdminTab(id) {
+  const ids = ['workers','projects','log','export'];
+  document.querySelectorAll('.admin-tab').forEach((t,i) => t.classList.toggle('active', ids[i] === id));
+  document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('atab-' + id).classList.add('active');
+  if (id === 'log') renderAdminLog();
+}
+
+function populateAdminSelects() {
+  ['afilter-worker','exp-worker'].forEach(id => {
+    const el = document.getElementById(id); if (!el) return;
+    const v = el.value; el.innerHTML = '<option value="">Všichni pracovníci</option>';
+    data.workers.forEach(w => el.innerHTML += `<option value="${w.name}">${w.name}</option>`); if (v) el.value = v;
+  });
+  ['afilter-project','exp-project'].forEach(id => {
+    const el = document.getElementById(id); if (!el) return;
+    const v = el.value; el.innerHTML = '<option value="">Všechny projekty</option>';
+    data.projects.forEach(p => el.innerHTML += `<option value="${p.name}">${p.name}</option>`); if (v) el.value = v;
+  });
+}
+
+function renderAdminWorkers() {
+  const el = document.getElementById('admin-worker-list');
+  if (!data.workers.length) { el.innerHTML = '<div class="empty">Žádní pracovníci</div>'; return; }
+  el.innerHTML = data.workers.map((w,i) => `
+    <div class="list-item">
+      <span style="display:flex;align-items:center;gap:8px">
+        <span class="avatar" style="width:30px;height:30px;font-size:11px;background:${w.color}22;color:${w.color}">${initials(w.name)}</span>
+        <strong style="font-size:14px">${w.name}</strong>
+      </span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="url-box">
+          <span id="url-${i}">${workerUrl(w.name)}</span>
+          <button class="btn-sm copy" onclick="copyUrl(${i})" title="Kopírovat odkaz">📋</button>
+        </div>
+        <button class="btn-sm danger" onclick="delWorker(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function copyUrl(i) {
+  const url = document.getElementById('url-' + i).textContent;
+  navigator.clipboard.writeText(url).then(() => toast('Odkaz zkopírován ✓')).catch(() => {
+    const ta = document.createElement('textarea'); ta.value = url;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+    toast('Odkaz zkopírován ✓');
+  });
+}
+
+function addWorker() {
+  const n = document.getElementById('new-worker').value.trim(); if (!n) return;
+  data.workers.push({ name: n, color: document.getElementById('worker-color').value });
+  document.getElementById('new-worker').value = '';
+  save(); renderAdminWorkers(); populateAdminSelects();
+}
+function delWorker(i) {
+  if (confirm('Smazat pracovníka?')) { data.workers.splice(i, 1); save(); renderAdminWorkers(); populateAdminSelects(); }
+}
+
+function renderProjects() {
+  const el = document.getElementById('project-list');
+  if (!data.projects.length) { el.innerHTML = '<div class="empty">Žádné projekty</div>'; return; }
+  el.innerHTML = data.projects.map((p,i) => `
+    <div class="list-item">
+      <span><span class="dot" style="background:${p.color}"></span>${p.name}</span>
+      <button class="btn-sm danger" onclick="delProject(${i})">✕</button>
+    </div>`).join('');
+}
+function addProject() {
+  const n = document.getElementById('new-project').value.trim(); if (!n) return;
+  data.projects.push({ name: n, color: document.getElementById('proj-color').value });
+  document.getElementById('new-project').value = '';
+  save(); renderProjects(); populateAdminSelects();
+}
+function delProject(i) { data.projects.splice(i, 1); save(); renderProjects(); populateAdminSelects(); }
+
+function renderAdminLog() {
+  const fw = document.getElementById('afilter-worker').value;
+  const fp = document.getElementById('afilter-project').value;
+  const fm = document.getElementById('afilter-month').value;
+  const entries = data.log.filter(e => (!fw||e.worker===fw) && (!fp||e.project===fp) && (!fm||e.date.startsWith(fm)));
+  const tbody = document.getElementById('alog-body');
+  if (!entries.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty">Žádné záznamy</td></tr>';
+    ['astat-entries','astat-hours','astat-projects'].forEach(id => document.getElementById(id).textContent = '0'); return;
+  }
+  tbody.innerHTML = entries.map(e => {
+    const proj = data.projects.find(x => x.name === e.project), col = proj ? proj.color : '#888';
+    const origIdx = data.log.indexOf(e);
+    return `<tr><td>${fmtDate(e.date)}</td><td>${e.worker}</td><td><span class="badge" style="background:${col}22;color:${col}">${e.project}</span></td><td>${e.start}</td><td>${e.end}</td><td>${minToHM(timeToMin(e.end)-timeToMin(e.start))}</td><td style="color:var(--text2)">${e.note}</td><td><button class="btn-sm danger" onclick="delEntry(${origIdx})">✕</button></td></tr>`;
+  }).join('');
+  const totalMin = entries.reduce((s,e) => s + timeToMin(e.end) - timeToMin(e.start), 0);
+  document.getElementById('astat-entries').textContent = entries.length;
+  document.getElementById('astat-hours').textContent = minToHM(totalMin);
+  document.getElementById('astat-projects').textContent = new Set(entries.map(e => e.project)).size;
+}
+function delEntry(i) { if (confirm('Smazat záznam?')) { data.log.splice(i, 1); save(); renderAdminLog(); } }
+
+function exportCSV() {
+  const fw = document.getElementById('exp-worker').value, fp = document.getElementById('exp-project').value;
+  const from = document.getElementById('exp-from').value, to = document.getElementById('exp-to').value;
+  const rows = data.log.filter(e => (!fw||e.worker===fw) && (!fp||e.project===fp) && (!from||e.date>=from) && (!to||e.date<=to));
+  if (!rows.length) { document.getElementById('exp-info').textContent = 'Žádné záznamy neodpovídají filtrům.'; return; }
+  const header = 'Datum,Pracovník,Projekt,Začátek,Konec,Trvání (h),Práce';
+  const lines = rows.map(e => [fmtDate(e.date), e.worker, e.project, e.start, e.end, ((timeToMin(e.end)-timeToMin(e.start))/60).toFixed(2), e.note].map(v => `"${v}"`).join(','));
+  const blob = new Blob([[header, ...lines].join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'evidence-prace.csv'; a.click();
+  URL.revokeObjectURL(url);
+  document.getElementById('exp-info').textContent = `Exportováno ${rows.length} záznamů.`;
+}
+
+init();
+</script>
+</body>
+</html>
