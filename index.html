@@ -7,93 +7,95 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #F7F7F5; --bg2: #EFEFEC; --surface: #FFFFFF;
-    --border: #E0DED8; --border2: #CCCBC5;
-    --text: #1A1A18; --text2: #6B6B66; --text3: #9B9B95;
-    --green: #1D9E75; --green-dark: #0F6E56;
-    --red: #D85A30;
-    --radius: 10px; --radius-sm: 7px;
+    --bg:#F7F7F5; --bg2:#EFEFEC; --surface:#FFFFFF;
+    --border:#E0DED8; --border2:#CCCBC5;
+    --text:#1A1A18; --text2:#6B6B66; --text3:#9B9B95;
+    --green:#1D9E75; --green-dark:#0F6E56; --red:#D85A30;
+    --radius:10px; --radius-sm:7px;
   }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.5; }
-  .app { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
-  .screen { display: none; } .screen.active { display: block; }
-  .topnav { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
-  .topnav-title { font-size: 16px; font-weight: 600; flex: 1; }
-  .back-btn { display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--text2); cursor: pointer; border: none; background: none; padding: 0; }
-  .back-btn:hover { color: var(--text); }
-  .hero { text-align: center; padding: 2rem 0 1.5rem; }
-  .hero h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
-  .hero p { font-size: 14px; color: var(--text2); }
-  .tabs { display: flex; gap: 4px; background: var(--bg2); border-radius: var(--radius); padding: 4px; margin-bottom: 1.5rem; }
-  .tab { flex: 1; padding: 8px 12px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--text2); border-radius: var(--radius-sm); transition: background .15s, color .15s; }
-  .tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-  .tabcontent { display: none; } .tabcontent.active { display: block; }
-  .admin-tabs { display: flex; gap: 4px; flex-wrap: wrap; background: var(--bg2); border-radius: var(--radius); padding: 4px; margin-bottom: 1.5rem; }
-  .admin-tab { flex: 1; min-width: 80px; padding: 8px 10px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--text2); border-radius: var(--radius-sm); transition: background .15s; text-align: center; }
-  .admin-tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-  .admin-content { display: none; } .admin-content.active { display: block; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 12px; }
-  .section-title { font-size: 15px; font-weight: 600; margin-bottom: 1rem; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .form-group { display: flex; flex-direction: column; gap: 5px; }
-  .form-group.full { grid-column: 1 / -1; }
-  .form-group label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .04em; }
-  .form-group input, .form-group select { font-size: 14px; width: 100%; background: var(--bg); border: 1px solid var(--border2); border-radius: var(--radius-sm); padding: 8px 10px; color: var(--text); outline: none; transition: border-color .15s; }
-  .form-group input:focus, .form-group select:focus { border-color: var(--green); }
-  .field-err input, .field-err select { border-color: var(--red) !important; }
-  .err { font-size: 12px; color: var(--red); display: none; }
-  .field-err .err { display: block; }
-  .dur-display { font-size: 13px; color: var(--text2); padding: 9px 12px; background: var(--bg2); border-radius: var(--radius-sm); text-align: center; border: 1px solid var(--border); }
-  .dur-val { font-size: 16px; font-weight: 600; color: var(--text); }
-  .btn-row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
-  .btn { padding: 9px 20px; font-size: 14px; font-weight: 500; border-radius: var(--radius-sm); border: 1px solid var(--border2); cursor: pointer; background: var(--bg2); color: var(--text2); transition: background .15s; }
-  .btn:hover { background: var(--bg); color: var(--text); }
-  .btn.primary { background: var(--green); border-color: var(--green-dark); color: #fff; }
-  .btn.primary:hover { background: var(--green-dark); }
-  .btn-sm { padding: 4px 10px; font-size: 12px; font-weight: 500; border-radius: var(--radius-sm); border: 1px solid var(--border); cursor: pointer; background: var(--bg2); color: var(--text2); }
-  .btn-sm.danger { color: var(--red); border-color: transparent; }
-  .btn-sm.copy { color: var(--text2); border-color: transparent; }
-  .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1rem; }
-  .metric { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
-  .metric-val { font-size: 22px; font-weight: 700; }
-  .metric-lbl { font-size: 12px; color: var(--text2); margin-top: 2px; }
-  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
-  .filter-row select, .filter-row input { font-size: 13px; padding: 6px 10px; background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); outline: none; }
-  .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
-  th { text-align: left; font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .05em; padding: 9px 10px; border-bottom: 1px solid var(--border); background: var(--bg2); }
-  td { padding: 9px 10px; border-bottom: 1px solid var(--border); color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--bg); }
-  .badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-  .list-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
-  .list-item:last-child { border-bottom: none; }
-  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
-  .avatar { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
-  .url-box { display: flex; align-items: center; gap: 6px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px 10px; font-size: 12px; color: var(--text2); max-width: 280px; }
-  .url-box span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .empty { text-align: center; color: var(--text2); padding: 2.5rem; font-size: 14px; }
-  .not-found { text-align: center; padding: 4rem 1rem; }
-  .not-found .icon { font-size: 48px; margin-bottom: 16px; }
-  .not-found h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-  .not-found p { font-size: 14px; color: var(--text2); }
-  .toast { position: fixed; bottom: 20px; right: 20px; background: var(--text); color: #fff; padding: 10px 18px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; z-index: 999; animation: slideUp .2s ease; }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .pass-wrap { max-width: 340px; margin: 0 auto; }
-  .sync-status { font-size: 12px; color: var(--text3); }
-  .sync-status.ok { color: var(--green); }
-  .sync-status.err { color: var(--red); }
-  .loading-overlay { position: fixed; inset: 0; background: rgba(247,247,245,.88); display: flex; align-items: center; justify-content: center; z-index: 1000; font-size: 14px; color: var(--text2); gap: 10px; }
-  .spinner { width: 20px; height: 20px; border: 2px solid var(--border2); border-top-color: var(--green); border-radius: 50%; animation: spin .7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } .form-group.full { grid-column: 1; } .url-box { max-width: 160px; } }
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.5}
+  .app{max-width:700px;margin:0 auto;padding:1.5rem 1rem 4rem}
+  .screen{display:none}.screen.active{display:block}
+  .topnav{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .topnav-title{font-size:16px;font-weight:600;flex:1}
+  .back-btn{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);cursor:pointer;border:none;background:none;padding:0}
+  .back-btn:hover{color:var(--text)}
+  .hero{text-align:center;padding:2rem 0 1.5rem}
+  .hero h1{font-size:24px;font-weight:700;margin-bottom:6px}
+  .hero p{font-size:14px;color:var(--text2)}
+  .tabs{display:flex;gap:4px;background:var(--bg2);border-radius:var(--radius);padding:4px;margin-bottom:1.5rem}
+  .tab{flex:1;padding:8px 12px;font-size:14px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--text2);border-radius:var(--radius-sm);transition:background .15s}
+  .tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .tabcontent{display:none}.tabcontent.active{display:block}
+  .admin-tabs{display:flex;gap:4px;flex-wrap:wrap;background:var(--bg2);border-radius:var(--radius);padding:4px;margin-bottom:1.5rem}
+  .admin-tab{flex:1;min-width:72px;padding:7px 8px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--text2);border-radius:var(--radius-sm);transition:background .15s;text-align:center}
+  .admin-tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .admin-content{display:none}.admin-content.active{display:block}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:12px}
+  .section-title{font-size:15px;font-weight:600;margin-bottom:1rem}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .form-group{display:flex;flex-direction:column;gap:5px}
+  .form-group.full{grid-column:1/-1}
+  .form-group label{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
+  .form-group input,.form-group select{font-size:14px;width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:8px 10px;color:var(--text);outline:none;transition:border-color .15s}
+  .form-group input:focus,.form-group select:focus{border-color:var(--green)}
+  .field-err input,.field-err select{border-color:var(--red)!important}
+  .err{font-size:12px;color:var(--red);display:none}
+  .field-err .err{display:block}
+  .dur-display{font-size:13px;color:var(--text2);padding:9px 12px;background:var(--bg2);border-radius:var(--radius-sm);text-align:center;border:1px solid var(--border)}
+  .dur-val{font-size:16px;font-weight:600;color:var(--text)}
+  .btn-row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+  .btn{padding:9px 20px;font-size:14px;font-weight:500;border-radius:var(--radius-sm);border:1px solid var(--border2);cursor:pointer;background:var(--bg2);color:var(--text2);transition:background .15s}
+  .btn:hover{background:var(--bg);color:var(--text)}
+  .btn.primary{background:var(--green);border-color:var(--green-dark);color:#fff}
+  .btn.primary:hover{background:var(--green-dark)}
+  .btn-sm{padding:4px 10px;font-size:12px;font-weight:500;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;background:var(--bg2);color:var(--text2)}
+  .btn-sm.danger{color:var(--red);border-color:transparent}
+  .btn-sm.copy{color:var(--text2);border-color:transparent}
+  .meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+  .metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center}
+  .metric-val{font-size:22px;font-weight:700}
+  .metric-lbl{font-size:12px;color:var(--text2);margin-top:2px}
+  .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+  .filter-row select,.filter-row input{font-size:13px;padding:6px 10px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);outline:none}
+  .table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+  th{text-align:left;font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;padding:9px 10px;border-bottom:1px solid var(--border);background:var(--bg2)}
+  td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--bg)}
+  .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600}
+  .list-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+  .list-item:last-child{border-bottom:none}
+  .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:8px}
+  .avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+  .url-box{display:flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;font-size:12px;color:var(--text2);max-width:280px}
+  .url-box span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .empty{text-align:center;color:var(--text2);padding:2.5rem;font-size:14px}
+  .not-found{text-align:center;padding:4rem 1rem}
+  .not-found .icon{font-size:48px;margin-bottom:16px}
+  .not-found h2{font-size:20px;font-weight:700;margin-bottom:8px}
+  .not-found p{font-size:14px;color:var(--text2)}
+  .toast{position:fixed;bottom:20px;right:20px;background:var(--text);color:#fff;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;z-index:999;animation:slideUp .2s ease}
+  @keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .pass-wrap{max-width:340px;margin:0 auto}
+  .sync-status{font-size:12px;color:var(--text3)}
+  .sync-status.ok{color:var(--green)}
+  .sync-status.err{color:var(--red)}
+  .loading-overlay{position:fixed;inset:0;background:rgba(247,247,245,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:12px}
+  .loading-msg{font-size:14px;color:var(--text2)}
+  .spinner{width:24px;height:24px;border:2px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .info-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--text2);margin-bottom:12px}
+  @media(max-width:480px){.form-grid{grid-template-columns:1fr}.form-group.full{grid-column:1}.url-box{max-width:160px}}
 </style>
 </head>
 <body>
 <div class="app">
 
   <div id="loading-overlay" class="loading-overlay">
-    <div class="spinner"></div> Načítám data…
+    <div class="spinner"></div>
+    <div class="loading-msg" id="loading-msg">Načítám data…</div>
   </div>
 
   <!-- 404 -->
@@ -196,7 +198,7 @@
   <!-- SPRÁVCE -->
   <div id="scr-admin" class="screen">
     <div class="topnav">
-      <button class="back-btn" onclick="showScreen('scr-admin-login')">← Odhlásit</button>
+      <button class="back-btn" onclick="logoutAdmin()">← Odhlásit</button>
       <div class="topnav-title">Správce</div>
       <div id="admin-sync-status" class="sync-status"></div>
     </div>
@@ -205,8 +207,10 @@
       <button class="admin-tab" onclick="switchAdminTab('projects')">Projekty</button>
       <button class="admin-tab" onclick="switchAdminTab('log')">Přehled</button>
       <button class="admin-tab" onclick="switchAdminTab('export')">Export</button>
+      <button class="admin-tab" onclick="switchAdminTab('settings')">⚙ Heslo</button>
     </div>
 
+    <!-- PRACOVNÍCI -->
     <div id="atab-workers" class="admin-content active">
       <div class="card">
         <div class="section-title">Přidat pracovníka</div>
@@ -225,6 +229,7 @@
       <div class="card" id="admin-worker-list"><div class="empty">Žádní pracovníci</div></div>
     </div>
 
+    <!-- PROJEKTY -->
     <div id="atab-projects" class="admin-content">
       <div class="card">
         <div class="section-title">Přidat projekt</div>
@@ -243,6 +248,7 @@
       <div class="card" id="project-list"><div class="empty">Žádné projekty</div></div>
     </div>
 
+    <!-- PŘEHLED -->
     <div id="atab-log" class="admin-content">
       <div class="meta-grid">
         <div class="metric"><div class="metric-val" id="astat-entries">0</div><div class="metric-lbl">Záznamy</div></div>
@@ -253,7 +259,7 @@
         <select id="afilter-worker" onchange="filterAndShowAdminLog()"><option value="">Všichni pracovníci</option></select>
         <select id="afilter-project" onchange="filterAndShowAdminLog()"><option value="">Všechny projekty</option></select>
         <input type="month" id="afilter-month" onchange="filterAndShowAdminLog()">
-        <button class="btn-sm" onclick="renderAdminLog()" style="margin-left:4px">↻ Načíst</button>
+        <button class="btn-sm" onclick="renderAdminLog()">↻ Načíst</button>
       </div>
       <div class="table-wrap">
         <table>
@@ -264,6 +270,7 @@
       </div>
     </div>
 
+    <!-- EXPORT -->
     <div id="atab-export" class="admin-content">
       <div class="card">
         <div class="section-title">Export do CSV</div>
@@ -277,18 +284,69 @@
       </div>
       <div class="card" id="exp-info" style="font-size:13px;color:var(--text2)">Nastavte filtry a stáhněte soubor.</div>
     </div>
-  </div>
 
-</div>
+    <!-- NASTAVENÍ / ZMĚNA HESLA -->
+    <div id="atab-settings" class="admin-content">
+      <div class="card">
+        <div class="section-title">Změna hesla správce</div>
+        <div class="info-box">
+          Po změně hesla se automaticky přešifrují všechna data (konfigurace i záznamy všech pracovníků). Operace může trvat několik sekund.
+        </div>
+        <div class="form-grid">
+          <div class="form-group full" id="sfg-old">
+            <label>Současné heslo</label>
+            <input type="password" id="s-old-pass" placeholder="Současné heslo…" oninput="clearErr('sfg-old')">
+            <span class="err">Nesprávné heslo</span>
+          </div>
+          <div class="form-group" id="sfg-new">
+            <label>Nové heslo</label>
+            <input type="password" id="s-new-pass" placeholder="Nové heslo…" oninput="clearErr('sfg-new')">
+            <span class="err">Zadejte nové heslo</span>
+          </div>
+          <div class="form-group" id="sfg-confirm">
+            <label>Potvrdit nové heslo</label>
+            <input type="password" id="s-confirm-pass" placeholder="Zopakujte heslo…" oninput="clearErr('sfg-confirm')">
+            <span class="err">Hesla se neshodují</span>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn primary" onclick="changePassword()">Změnit heslo a přešifrovat</button>
+        </div>
+        <div id="settings-status" style="margin-top:12px;font-size:13px;display:none"></div>
+      </div>
+    </div>
+
+  </div><!-- /scr-admin -->
+
+</div><!-- /app -->
+
 <script>
+// ═══════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════
 const SUPABASE_URL = 'https://ihlcbhvfydqlwkjhhkgz.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlobGNiaHZmeWRxbHdramhoa2d6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzUxNjgsImV4cCI6MjA5Njc1MTE2OH0.gaJfBzou6gVuN6Va-ERWdkLE3GiRNwFNvjRHuU1XmWs';
-const ADMIN_PASS   = '1234';
-const SALT         = 'evidence-prace-2025';
+const SALT = 'evidence-prace-2025';
+const DEFAULT_PASS = '1234';
 
-// ── CRYPTO ──────────────────────────────────────
+// ═══════════════════════════════════════════
+// RUNTIME STATE  (heslo se načte z DB)
+// ═══════════════════════════════════════════
+let ADMIN_PASS = null;          // načteno z Supabase při startu
+let currentWorker = null;
+let adminData = { workers:[], projects:[] };
+let workerLog = [];
+let allLogsCache = [];
+
+// Klíče jsou dynamické — vždy čtou aktuální ADMIN_PASS
+const adminKey  = ()  => ADMIN_PASS + SALT;
+const workerKey = (n) => ADMIN_PASS + n + SALT;
+
+// ═══════════════════════════════════════════
+// CRYPTO  –  AES-256-GCM
+// ═══════════════════════════════════════════
 async function deriveKey(pwd) {
-  const e = new TextEncoder();
+  const e  = new TextEncoder();
   const km = await crypto.subtle.importKey('raw', e.encode(pwd), 'PBKDF2', false, ['deriveKey']);
   return crypto.subtle.deriveKey(
     { name:'PBKDF2', salt:e.encode(SALT), iterations:100000, hash:'SHA-256' },
@@ -305,91 +363,148 @@ async function encrypt(obj, pwd) {
 }
 async function decrypt(b64, pwd) {
   const key = await deriveKey(pwd);
-  const buf = Uint8Array.from(atob(b64), c=>c.charCodeAt(0));
-  const pt  = await crypto.subtle.decrypt({name:'AES-GCM',iv:buf.slice(0,12)}, key, buf.slice(12));
+  const buf = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  const pt  = await crypto.subtle.decrypt({name:'AES-GCM', iv:buf.slice(0,12)}, key, buf.slice(12));
   return JSON.parse(new TextDecoder().decode(pt));
 }
 
-// ── SUPABASE ─────────────────────────────────────
+// ═══════════════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════════════
 const H = { apikey:SUPABASE_KEY, Authorization:'Bearer '+SUPABASE_KEY, 'Content-Type':'application/json' };
 async function dbGet(slug) {
-  const r = await fetch(`${SUPABASE_URL}/rest/v1/entries?worker_slug=eq.${encodeURIComponent(slug)}&select=payload`, {headers:H});
-  const rows = await r.json(); return rows.length ? rows[0].payload : null;
+  const r    = await fetch(`${SUPABASE_URL}/rest/v1/entries?worker_slug=eq.${encodeURIComponent(slug)}&select=payload,updated_at&order=updated_at.desc&limit=1`, {headers:H});
+  const rows = await r.json();
+  if (!r.ok) throw new Error("dbGet failed: " + JSON.stringify(rows));
+  return rows.length ? rows[0].payload : null;
 }
 async function dbSet(slug, payload) {
-  await fetch(`${SUPABASE_URL}/rest/v1/entries`, {
-    method:'POST', headers:{...H, Prefer:'resolution=merge-duplicates'},
+  // DELETE + INSERT - funguje bez unique constraintu
+  await fetch(`${SUPABASE_URL}/rest/v1/entries?worker_slug=eq.${encodeURIComponent(slug)}`, {
+    method:"DELETE", headers:H
+  });
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/entries`, {
+    method:"POST",
+    headers:{...H, Prefer:"return=minimal"},
     body: JSON.stringify({worker_slug:slug, payload, updated_at:new Date().toISOString()})
   });
+  if (!r.ok) { const t=await r.text(); throw new Error("dbSet failed: "+t); }
 }
 
-// ── STATE ─────────────────────────────────────────
-let currentWorker = null;
-let adminData = { workers:[], projects:[] };
-let workerLog = [];
-let allLogsCache = [];
-const adminKey  = () => ADMIN_PASS + SALT;
-const workerKey = n => ADMIN_PASS + n + SALT;
+// ═══════════════════════════════════════════
+// HESLO  –  uloženo NEŠIFROVANĚ pod __pass__
+// (je to přihlašovací heslo, ne šifrovací klíč sám o sobě)
+// ═══════════════════════════════════════════
+async function loadPassword() {
+  const raw = await dbGet('__pass__');
+  if (!raw) {
+    // první spuštění – ulož výchozí heslo
+    ADMIN_PASS = DEFAULT_PASS;
+    await dbSet('__pass__', DEFAULT_PASS);
+  } else {
+    ADMIN_PASS = raw;
+  }
+}
+async function savePassword(newPass) {
+  await dbSet('__pass__', newPass);
+  ADMIN_PASS = newPass;
+}
 
-// ── HELPERS ───────────────────────────────────────
-const fmtDate  = d => { const p=d.split('-'); return `${p[2]}.${p[1]}.${p[0]}`; };
-const minToHM  = m => { const h=Math.floor(m/60),mn=m%60; return h>0?(mn>0?`${h}h ${mn}min`:`${h}h`):`${mn}min`; };
-const timeToMin= t => { const [h,m]=t.split(':').map(Number); return h*60+m; };
-const initials = n => n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-const slugify  = n => encodeURIComponent(n.trim().toLowerCase().replace(/\s+/g,'-'));
-const workerUrl= n => window.location.href.split('?')[0].split('#')[0]+'?worker='+slugify(n);
-const getParam = k => new URLSearchParams(window.location.search).get(k);
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+const fmtDate   = d => { const p=d.split('-'); return `${p[2]}.${p[1]}.${p[0]}`; };
+const minToHM   = m => { const h=Math.floor(m/60),mn=m%60; return h>0?(mn>0?`${h}h ${mn}min`:`${h}h`):`${mn}min`; };
+const timeToMin = t => { const [h,m]=t.split(':').map(Number); return h*60+m; };
+const initials  = n => n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+const slugify   = n => encodeURIComponent(n.trim().toLowerCase().replace(/\s+/g,'-'));
+const workerUrl = n => window.location.href.split('?')[0].split('#')[0]+'?worker='+slugify(n);
+const getParam  = k => new URLSearchParams(window.location.search).get(k);
 
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
-function showLoading(v){document.getElementById('loading-overlay').style.display=v?'flex':'none';}
+function showLoading(v,msg){
+  document.getElementById('loading-overlay').style.display=v?'flex':'none';
+  if(msg) document.getElementById('loading-msg').textContent=msg;
+}
 function clearErr(id){const el=document.getElementById(id);if(el)el.classList.remove('field-err');}
 function showErr(id){const el=document.getElementById(id);if(el)el.classList.add('field-err');}
 function setSync(id,msg,t){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className='sync-status '+(t||'');}
-function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2200);}
+function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2400);}
 
-// ── ROUTING ───────────────────────────────────────
+// ═══════════════════════════════════════════
+// ROUTING
+// ═══════════════════════════════════════════
 async function init() {
-  showLoading(true);
+  showLoading(true,'Připojuji se k databázi…');
   try {
-    if (getParam('admin') !== null) {
-      showLoading(false); showScreen('scr-admin-login');
-    } else if (getParam('worker') !== null) {
+    await loadPassword();   // VŽDY jako první – načte ADMIN_PASS z DB
+
+    const adminParam  = getParam('admin');
+    const workerParam = getParam('worker');
+
+    if (adminParam !== null) {
+      // správcovský pohled
+      showLoading(false);
+      showScreen('scr-admin-login');
+    } else if (workerParam !== null) {
+      // pracovník – ověř, že existuje
+      showLoading(true,'Načítám konfiguraci…');
       await loadAdminData();
-      const wp = getParam('worker');
-      const w  = adminData.workers.find(w=>slugify(w.name)===wp.toLowerCase());
+      const w = adminData.workers.find(w => slugify(w.name) === workerParam.toLowerCase());
       if (!w) {
-        document.getElementById('notfound-msg').textContent = `Odkaz „?worker=${wp}" neodpovídá žádnému pracovníkovi.`;
-        showLoading(false); showScreen('scr-notfound');
+        document.getElementById('notfound-msg').textContent =
+          `Odkaz „?worker=${workerParam}" neodpovídá žádnému pracovníkovi.`;
+        showLoading(false);
+        showScreen('scr-notfound');
       } else {
-        await enterWorker(w.name); showLoading(false);
+        showLoading(true,'Načítám záznamy…');
+        await enterWorker(w.name);
+        showLoading(false);
       }
     } else {
-      showLoading(false); showScreen('scr-admin-login');
+      // bez parametru = přihlášení správce
+      showLoading(false);
+      showScreen('scr-admin-login');
     }
-  } catch(e) { showLoading(false); showScreen('scr-admin-login'); }
+  } catch(e) {
+    console.error(e);
+    showLoading(false);
+    showScreen('scr-admin-login');
+    toast('Chyba připojení k databázi');
+  }
 }
 
-// ── ADMIN DATA ────────────────────────────────────
+// ═══════════════════════════════════════════
+// ADMIN DATA  (pracovníci + projekty)
+// ═══════════════════════════════════════════
 async function loadAdminData() {
   const raw = await dbGet('__admin__');
-  if (!raw) return;
-  try { adminData = await decrypt(raw, adminKey()); } catch(e) {}
+  if (!raw) { adminData = { workers:[], projects:[] }; return; }
+  try {
+    adminData = await decrypt(raw, adminKey());
+  } catch(e) {
+    console.warn('Nelze dešifrovat admin data:', e);
+    adminData = { workers:[], projects:[] };
+  }
 }
 async function saveAdminData() {
   await dbSet('__admin__', await encrypt(adminData, adminKey()));
 }
 
-// ── WORKER LOG DATA ───────────────────────────────
+// ═══════════════════════════════════════════
+// WORKER LOG DATA
+// ═══════════════════════════════════════════
 async function loadWorkerLog(name) {
   const raw = await dbGet('worker__'+slugify(name));
   if (!raw) { workerLog=[]; return; }
-  try { workerLog = await decrypt(raw, workerKey(name)); } catch(e) { workerLog=[]; }
+  try { workerLog = await decrypt(raw, workerKey(name)); }
+  catch(e) { workerLog=[]; }
 }
 async function saveWorkerLog(name) {
   await dbSet('worker__'+slugify(name), await encrypt(workerLog, workerKey(name)));
 }
 async function loadAllLogs() {
-  const all = [];
+  const all=[];
   for (const w of adminData.workers) {
     const raw = await dbGet('worker__'+slugify(w.name));
     if (!raw) continue;
@@ -398,33 +513,51 @@ async function loadAllLogs() {
   return all;
 }
 
-// ── ADMIN LOGIN ───────────────────────────────────
-function clearAdminErr(){document.getElementById('admin-pass-err').style.display='none';document.getElementById('admin-pass-input').style.borderColor='';}
+// ═══════════════════════════════════════════
+// ADMIN LOGIN / LOGOUT
+// ═══════════════════════════════════════════
+function clearAdminErr(){
+  document.getElementById('admin-pass-err').style.display='none';
+  document.getElementById('admin-pass-input').style.borderColor='';
+}
 async function loginAdmin() {
-  if (document.getElementById('admin-pass-input').value !== ADMIN_PASS) {
+  const entered = document.getElementById('admin-pass-input').value;
+  if (entered !== ADMIN_PASS) {
     document.getElementById('admin-pass-err').style.display='block';
-    document.getElementById('admin-pass-input').style.borderColor='var(--red)'; return;
+    document.getElementById('admin-pass-input').style.borderColor='var(--red)';
+    return;
   }
   document.getElementById('admin-pass-input').value='';
-  showLoading(true);
+  showLoading(true,'Načítám data…');
   try {
     await loadAdminData();
     populateAdminSelects(); renderAdminWorkers(); renderProjects();
-    switchAdminTab('workers'); showScreen('scr-admin');
-    setSync('admin-sync-status','🔒 Šifrováno a připojeno','ok');
-  } catch(e) { setSync('admin-sync-status','Chyba připojení','err'); }
+    switchAdminTab('workers');
+    showScreen('scr-admin');
+    setSync('admin-sync-status','🔒 Připojeno','ok');
+  } catch(e) {
+    setSync('admin-sync-status','Chyba připojení','err');
+    toast('Nepodařilo se načíst data');
+  }
   showLoading(false);
+}
+function logoutAdmin(){
+  document.getElementById('admin-pass-input').value='';
+  showScreen('scr-admin-login');
 }
 
 function switchAdminTab(id) {
-  ['workers','projects','log','export'].forEach((t,i)=>document.querySelectorAll('.admin-tab')[i].classList.toggle('active',t===id));
+  const ids=['workers','projects','log','export','settings'];
+  document.querySelectorAll('.admin-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));
   document.querySelectorAll('.admin-content').forEach(c=>c.classList.remove('active'));
   document.getElementById('atab-'+id).classList.add('active');
-  if (id==='log') renderAdminLog();
+  if(id==='log') renderAdminLog();
 }
 
-// ── WORKERS ───────────────────────────────────────
-function renderAdminWorkers(){
+// ═══════════════════════════════════════════
+// WORKERS
+// ═══════════════════════════════════════════
+function renderAdminWorkers() {
   const el=document.getElementById('admin-worker-list');
   if(!adminData.workers.length){el.innerHTML='<div class="empty">Žádní pracovníci</div>';return;}
   el.innerHTML=adminData.workers.map((w,i)=>`
@@ -434,7 +567,10 @@ function renderAdminWorkers(){
         <strong>${w.name}</strong>
       </span>
       <div style="display:flex;align-items:center;gap:6px">
-        <div class="url-box"><span id="url-${i}">${workerUrl(w.name)}</span><button class="btn-sm copy" onclick="copyUrl(${i})">📋</button></div>
+        <div class="url-box">
+          <span id="url-${i}">${workerUrl(w.name)}</span>
+          <button class="btn-sm copy" onclick="copyUrl(${i})" title="Kopírovat">📋</button>
+        </div>
         <button class="btn-sm danger" onclick="delWorker(${i})">✕</button>
       </div>
     </div>`).join('');
@@ -446,18 +582,26 @@ function copyUrl(i){
   });
 }
 async function addWorker(){
-  const n=document.getElementById('new-worker').value.trim();if(!n)return;
-  adminData.workers.push({name:n,color:document.getElementById('worker-color').value});
+  const n=document.getElementById('new-worker').value.trim(); if(!n) return;
+  adminData.workers.push({name:n, color:document.getElementById('worker-color').value});
   document.getElementById('new-worker').value='';
-  showLoading(true); await saveAdminData(); renderAdminWorkers(); populateAdminSelects(); showLoading(false); toast('Pracovník přidán ✓');
+  showLoading(true,'Ukládám…');
+  await saveAdminData();
+  renderAdminWorkers(); populateAdminSelects();
+  showLoading(false); toast('Pracovník přidán ✓');
 }
 async function delWorker(i){
-  if(!confirm('Smazat pracovníka?'))return;
+  if(!confirm('Smazat pracovníka?')) return;
   adminData.workers.splice(i,1);
-  showLoading(true); await saveAdminData(); renderAdminWorkers(); populateAdminSelects(); showLoading(false);
+  showLoading(true,'Ukládám…');
+  await saveAdminData();
+  renderAdminWorkers(); populateAdminSelects();
+  showLoading(false);
 }
 
-// ── PROJECTS ──────────────────────────────────────
+// ═══════════════════════════════════════════
+// PROJECTS
+// ═══════════════════════════════════════════
 function renderProjects(){
   const el=document.getElementById('project-list');
   if(!adminData.projects.length){el.innerHTML='<div class="empty">Žádné projekty</div>';return;}
@@ -468,46 +612,68 @@ function renderProjects(){
     </div>`).join('');
 }
 async function addProject(){
-  const n=document.getElementById('new-project').value.trim();if(!n)return;
-  adminData.projects.push({name:n,color:document.getElementById('proj-color').value});
+  const n=document.getElementById('new-project').value.trim(); if(!n) return;
+  adminData.projects.push({name:n, color:document.getElementById('proj-color').value});
   document.getElementById('new-project').value='';
-  showLoading(true); await saveAdminData(); renderProjects(); populateAdminSelects(); showLoading(false); toast('Projekt přidán ✓');
+  showLoading(true,'Ukládám…');
+  await saveAdminData();
+  renderProjects(); populateAdminSelects();
+  showLoading(false); toast('Projekt přidán ✓');
 }
 async function delProject(i){
   adminData.projects.splice(i,1);
-  showLoading(true); await saveAdminData(); renderProjects(); populateAdminSelects(); showLoading(false);
+  showLoading(true,'Ukládám…');
+  await saveAdminData();
+  renderProjects(); populateAdminSelects();
+  showLoading(false);
 }
 function populateAdminSelects(){
   ['afilter-worker','exp-worker'].forEach(id=>{
     const el=document.getElementById(id);if(!el)return;
-    const v=el.value;el.innerHTML='<option value="">Všichni pracovníci</option>';
-    adminData.workers.forEach(w=>el.innerHTML+=`<option value="${w.name}">${w.name}</option>`);if(v)el.value=v;
+    const v=el.value; el.innerHTML='<option value="">Všichni pracovníci</option>';
+    adminData.workers.forEach(w=>el.innerHTML+=`<option value="${w.name}">${w.name}</option>`);
+    if(v) el.value=v;
   });
   ['afilter-project','exp-project'].forEach(id=>{
     const el=document.getElementById(id);if(!el)return;
-    const v=el.value;el.innerHTML='<option value="">Všechny projekty</option>';
-    adminData.projects.forEach(p=>el.innerHTML+=`<option value="${p.name}">${p.name}</option>`);if(v)el.value=v;
+    const v=el.value; el.innerHTML='<option value="">Všechny projekty</option>';
+    adminData.projects.forEach(p=>el.innerHTML+=`<option value="${p.name}">${p.name}</option>`);
+    if(v) el.value=v;
   });
 }
 
-// ── ADMIN LOG ─────────────────────────────────────
+// ═══════════════════════════════════════════
+// ADMIN LOG
+// ═══════════════════════════════════════════
 async function renderAdminLog(){
-  showLoading(true); allLogsCache=await loadAllLogs(); showLoading(false); filterAndShowAdminLog();
+  showLoading(true,'Načítám záznamy…');
+  allLogsCache=await loadAllLogs();
+  showLoading(false);
+  filterAndShowAdminLog();
 }
 function filterAndShowAdminLog(){
   const fw=document.getElementById('afilter-worker').value;
   const fp=document.getElementById('afilter-project').value;
   const fm=document.getElementById('afilter-month').value;
-  const entries=[...allLogsCache].filter(e=>(!fw||e.worker===fw)&&(!fp||e.project===fp)&&(!fm||e.date.startsWith(fm)));
+  const entries=[...allLogsCache]
+    .filter(e=>(!fw||e.worker===fw)&&(!fp||e.project===fp)&&(!fm||e.date.startsWith(fm)));
   entries.sort((a,b)=>a.date<b.date?1:-1);
   const tbody=document.getElementById('alog-body');
   if(!entries.length){
     tbody.innerHTML='<tr><td colspan="8" class="empty">Žádné záznamy</td></tr>';
-    ['astat-entries','astat-hours','astat-projects'].forEach(id=>document.getElementById(id).textContent='0');return;
+    ['astat-entries','astat-hours','astat-projects'].forEach(id=>document.getElementById(id).textContent='0');
+    return;
   }
   tbody.innerHTML=entries.map((e,i)=>{
-    const proj=adminData.projects.find(x=>x.name===e.project),col=proj?proj.color:'#888';
-    return `<tr><td>${fmtDate(e.date)}</td><td>${e.worker}</td><td><span class="badge" style="background:${col}22;color:${col}">${e.project}</span></td><td>${e.start}</td><td>${e.end}</td><td>${minToHM(timeToMin(e.end)-timeToMin(e.start))}</td><td style="color:var(--text2)">${e.note}</td><td><button class="btn-sm danger" onclick="adminDelEntry(${i})">✕</button></td></tr>`;
+    const proj=adminData.projects.find(x=>x.name===e.project), col=proj?proj.color:'#888';
+    return `<tr>
+      <td>${fmtDate(e.date)}</td><td>${e.worker}</td>
+      <td><span class="badge" style="background:${col}22;color:${col}">${e.project}</span></td>
+      <td>${e.start}</td><td>${e.end}</td>
+      <td>${minToHM(timeToMin(e.end)-timeToMin(e.start))}</td>
+      <td style="color:var(--text2)">${e.note}</td>
+      <td><button class="btn-sm danger" onclick="adminDelEntry(${i})">✕</button></td>
+    </tr>`;
   }).join('');
   const tot=entries.reduce((s,e)=>s+timeToMin(e.end)-timeToMin(e.start),0);
   document.getElementById('astat-entries').textContent=entries.length;
@@ -515,93 +681,194 @@ function filterAndShowAdminLog(){
   document.getElementById('astat-projects').textContent=new Set(entries.map(e=>e.project)).size;
 }
 async function adminDelEntry(visIdx){
-  if(!confirm('Smazat záznam?'))return;
-  const fw=document.getElementById('afilter-worker').value,fp=document.getElementById('afilter-project').value,fm=document.getElementById('afilter-month').value;
-  const filtered=[...allLogsCache].filter(e=>(!fw||e.worker===fw)&&(!fp||e.project===fp)&&(!fm||e.date.startsWith(fm)));
+  if(!confirm('Smazat záznam?')) return;
+  const fw=document.getElementById('afilter-worker').value;
+  const fp=document.getElementById('afilter-project').value;
+  const fm=document.getElementById('afilter-month').value;
+  const filtered=[...allLogsCache]
+    .filter(e=>(!fw||e.worker===fw)&&(!fp||e.project===fp)&&(!fm||e.date.startsWith(fm)));
   filtered.sort((a,b)=>a.date<b.date?1:-1);
-  const entry=filtered[visIdx];if(!entry)return;
-  showLoading(true);
+  const entry=filtered[visIdx]; if(!entry) return;
+  showLoading(true,'Mažu…');
   await loadWorkerLog(entry.worker);
   const idx=workerLog.findIndex(e=>e.date===entry.date&&e.start===entry.start&&e.end===entry.end&&e.note===entry.note);
   if(idx!==-1){workerLog.splice(idx,1);await saveWorkerLog(entry.worker);}
-  const ci=allLogsCache.indexOf(entry);if(ci!==-1)allLogsCache.splice(ci,1);
-  showLoading(false);filterAndShowAdminLog();
+  const ci=allLogsCache.indexOf(entry); if(ci!==-1) allLogsCache.splice(ci,1);
+  showLoading(false);
+  filterAndShowAdminLog();
 }
 
-// ── EXPORT ────────────────────────────────────────
+// ═══════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════
 async function exportCSV(){
-  const fw=document.getElementById('exp-worker').value,fp=document.getElementById('exp-project').value;
-  const from=document.getElementById('exp-from').value,to=document.getElementById('exp-to').value;
-  showLoading(true);const all=await loadAllLogs();showLoading(false);
+  const fw=document.getElementById('exp-worker').value;
+  const fp=document.getElementById('exp-project').value;
+  const from=document.getElementById('exp-from').value;
+  const to=document.getElementById('exp-to').value;
+  showLoading(true,'Načítám data pro export…');
+  const all=await loadAllLogs();
+  showLoading(false);
   const rows=all.filter(e=>(!fw||e.worker===fw)&&(!fp||e.project===fp)&&(!from||e.date>=from)&&(!to||e.date<=to));
   if(!rows.length){document.getElementById('exp-info').textContent='Žádné záznamy neodpovídají filtrům.';return;}
   rows.sort((a,b)=>a.date<b.date?1:-1);
   const hdr='Datum,Pracovník,Projekt,Začátek,Konec,Trvání (h),Práce';
   const lines=rows.map(e=>[fmtDate(e.date),e.worker,e.project,e.start,e.end,((timeToMin(e.end)-timeToMin(e.start))/60).toFixed(2),e.note].map(v=>`"${v}"`).join(','));
   const blob=new Blob([[hdr,...lines].join('\n')],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='evidence-prace.csv';a.click();URL.revokeObjectURL(url);
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='evidence-prace.csv';a.click();
+  URL.revokeObjectURL(url);
   document.getElementById('exp-info').textContent=`Exportováno ${rows.length} záznamů.`;
 }
 
-// ── WORKER VIEW ───────────────────────────────────
+// ═══════════════════════════════════════════
+// ZMĚNA HESLA
+// ═══════════════════════════════════════════
+async function changePassword(){
+  const oldPass     = document.getElementById('s-old-pass').value;
+  const newPass     = document.getElementById('s-new-pass').value.trim();
+  const confirmPass = document.getElementById('s-confirm-pass').value.trim();
+  let ok=true;
+  if(oldPass !== ADMIN_PASS){ showErr('sfg-old'); ok=false; }
+  if(!newPass){ showErr('sfg-new'); ok=false; }
+  if(newPass !== confirmPass){ showErr('sfg-confirm'); ok=false; }
+  if(!ok) return;
+
+  const st=document.getElementById('settings-status');
+  st.style.display='block'; st.style.color='var(--text2)';
+
+  const oldKey = adminKey();              // záloha starého klíče před změnou
+
+  try {
+    // 1. Přešifruj adminData (pracovníci + projekty)
+    showLoading(true,'Přešifrovávám konfiguraci…');
+    st.textContent='Přešifrovávám konfiguraci…';
+    const newAdminKey = newPass + SALT;
+    await dbSet('__admin__', await encrypt(adminData, newAdminKey));
+
+    // 2. Přešifruj logy každého pracovníka
+    for(let i=0; i<adminData.workers.length; i++){
+      const w=adminData.workers[i];
+      showLoading(true,`Přešifrovávám záznamy: ${w.name} (${i+1}/${adminData.workers.length})…`);
+      st.textContent=`Přešifrovávám záznamy: ${w.name}…`;
+      const oldWKey = oldPass + w.name + SALT;
+      const newWKey = newPass + w.name + SALT;
+      const raw=await dbGet('worker__'+slugify(w.name));
+      if(!raw) continue;
+      try{
+        const logs=await decrypt(raw, oldWKey);
+        await dbSet('worker__'+slugify(w.name), await encrypt(logs, newWKey));
+      } catch(e){ console.warn('Nelze přešifrovat logy pro '+w.name, e); }
+    }
+
+    // 3. Ulož nové heslo
+    showLoading(true,'Ukládám nové heslo…');
+    await savePassword(newPass);
+
+    showLoading(false);
+    st.style.color='var(--green)';
+    st.textContent='✓ Heslo úspěšně změněno a všechna data přešifrována.';
+    document.getElementById('s-old-pass').value='';
+    document.getElementById('s-new-pass').value='';
+    document.getElementById('s-confirm-pass').value='';
+    toast('Heslo změněno ✓');
+  } catch(e){
+    console.error(e);
+    showLoading(false);
+    st.style.color='var(--red)';
+    st.textContent='Chyba: '+e.message;
+    toast('Chyba při změně hesla!');
+  }
+}
+
+// ═══════════════════════════════════════════
+// WORKER VIEW
+// ═══════════════════════════════════════════
 async function enterWorker(name){
   currentWorker=name;
-  const w=adminData.workers.find(x=>x.name===name),col=w?w.color:'#1D9E75';
+  const w=adminData.workers.find(x=>x.name===name), col=w?w.color:'#1D9E75';
   document.getElementById('worker-screen-title').textContent=name;
   const av=document.getElementById('worker-avatar');
-  av.style.background=col+'22';av.style.color=col;av.textContent=initials(name);
+  av.style.background=col+'22'; av.style.color=col; av.textContent=initials(name);
   document.getElementById('went-date').value=new Date().toISOString().split('T')[0];
+  // projekty
   const sel=document.getElementById('went-project');
-  sel.innerHTML='';adminData.projects.forEach(p=>sel.innerHTML+=`<option value="${p.name}">${p.name}</option>`);
+  sel.innerHTML=''; adminData.projects.forEach(p=>sel.innerHTML+=`<option value="${p.name}">${p.name}</option>`);
   const wf=document.getElementById('wfilter-project');
   wf.innerHTML='<option value="">Všechny projekty</option>';
   adminData.projects.forEach(p=>wf.innerHTML+=`<option value="${p.name}">${p.name}</option>`);
   await loadWorkerLog(name);
-  switchWorkerTab('entry');showScreen('scr-worker');
+  switchWorkerTab('entry');
+  showScreen('scr-worker');
   setSync('worker-sync-status','🔒 Šifrováno','ok');
 }
 function switchWorkerTab(id){
   document.querySelectorAll('#scr-worker .tab').forEach((t,i)=>t.classList.toggle('active',['entry','log'][i]===id));
   document.querySelectorAll('.tabcontent').forEach(t=>t.classList.remove('active'));
   document.getElementById('wtab-'+id).classList.add('active');
-  if(id==='log')renderWorkerLog();
+  if(id==='log') renderWorkerLog();
 }
 function wCalcDur(){
-  const s=document.getElementById('went-start').value,e=document.getElementById('went-end').value;
+  const s=document.getElementById('went-start').value, e=document.getElementById('went-end').value;
   const d=document.getElementById('wdur-display');
-  if(s&&e){const sm=timeToMin(s),em=timeToMin(e);
+  if(s&&e){
+    const sm=timeToMin(s), em=timeToMin(e);
     if(em<=sm){d.innerHTML='Trvání: <span class="dur-val" style="color:var(--red)">—</span>';return;}
-    d.innerHTML=`Trvání: <span class="dur-val">${minToHM(em-sm)}</span>`;}
-  else d.innerHTML='Trvání: <span class="dur-val">—</span>';
+    d.innerHTML=`Trvání: <span class="dur-val">${minToHM(em-sm)}</span>`;
+  } else d.innerHTML='Trvání: <span class="dur-val">—</span>';
 }
 async function wSaveEntry(){
-  const p=document.getElementById('went-project').value,d=document.getElementById('went-date').value;
-  const s=document.getElementById('went-start').value,e=document.getElementById('went-end').value;
+  const p=document.getElementById('went-project').value;
+  const d=document.getElementById('went-date').value;
+  const s=document.getElementById('went-start').value;
+  const e=document.getElementById('went-end').value;
   const n=document.getElementById('went-note').value.trim();
   let ok=true;
-  if(!p){showErr('wfg-project');ok=false;}if(!d){showErr('wfg-date');ok=false;}
-  if(!s){showErr('wfg-start');ok=false;}if(!e||timeToMin(e)<=timeToMin(s)){showErr('wfg-end');ok=false;}
-  if(!n){showErr('wfg-prace');ok=false;}if(!ok)return;
-  workerLog.push({worker:currentWorker,project:p,date:d,start:s,end:e,note:n});
+  if(!p){showErr('wfg-project');ok=false;}
+  if(!d){showErr('wfg-date');ok=false;}
+  if(!s){showErr('wfg-start');ok=false;}
+  if(!e||timeToMin(e)<=timeToMin(s)){showErr('wfg-end');ok=false;}
+  if(!n){showErr('wfg-prace');ok=false;}
+  if(!ok) return;
+  workerLog.push({worker:currentWorker, project:p, date:d, start:s, end:e, note:n});
   workerLog.sort((a,b)=>a.date<b.date?1:-1);
-  showLoading(true);
-  try{await saveWorkerLog(currentWorker);setSync('worker-sync-status','🔒 Uloženo a zašifrováno','ok');}
-  catch(err){setSync('worker-sync-status','Chyba uložení!','err');}
-  showLoading(false);wClearForm();toast('Záznam uložen ✓');
+  showLoading(true,'Ukládám…');
+  try{
+    await saveWorkerLog(currentWorker);
+    setSync('worker-sync-status','🔒 Uloženo','ok');
+  } catch(err){
+    setSync('worker-sync-status','Chyba uložení!','err');
+    toast('Chyba při ukládání!');
+  }
+  showLoading(false);
+  wClearForm(); toast('Záznam uložen ✓');
 }
 function wClearForm(){
-  document.getElementById('went-start').value='';document.getElementById('went-end').value='';document.getElementById('went-note').value='';
-  ['wfg-project','wfg-date','wfg-start','wfg-end','wfg-prace'].forEach(clearErr);wCalcDur();
+  document.getElementById('went-start').value='';
+  document.getElementById('went-end').value='';
+  document.getElementById('went-note').value='';
+  ['wfg-project','wfg-date','wfg-start','wfg-end','wfg-prace'].forEach(clearErr);
+  wCalcDur();
 }
 function renderWorkerLog(){
-  const fm=document.getElementById('wfilter-month').value,fp=document.getElementById('wfilter-project').value;
+  const fm=document.getElementById('wfilter-month').value;
+  const fp=document.getElementById('wfilter-project').value;
   const entries=workerLog.filter(e=>(!fm||e.date.startsWith(fm))&&(!fp||e.project===fp));
   const tbody=document.getElementById('wlog-body');
-  if(!entries.length){tbody.innerHTML='<tr><td colspan="6" class="empty">Žádné záznamy</td></tr>';
-    ['wstat-entries','wstat-hours','wstat-projects'].forEach(id=>document.getElementById(id).textContent='0');return;}
+  if(!entries.length){
+    tbody.innerHTML='<tr><td colspan="6" class="empty">Žádné záznamy</td></tr>';
+    ['wstat-entries','wstat-hours','wstat-projects'].forEach(id=>document.getElementById(id).textContent='0');
+    return;
+  }
   tbody.innerHTML=entries.map(e=>{
-    const proj=adminData.projects.find(x=>x.name===e.project),col=proj?proj.color:'#888';
-    return `<tr><td>${fmtDate(e.date)}</td><td><span class="badge" style="background:${col}22;color:${col}">${e.project}</span></td><td>${e.start}</td><td>${e.end}</td><td>${minToHM(timeToMin(e.end)-timeToMin(e.start))}</td><td style="color:var(--text2)">${e.note}</td></tr>`;
+    const proj=adminData.projects.find(x=>x.name===e.project), col=proj?proj.color:'#888';
+    return `<tr>
+      <td>${fmtDate(e.date)}</td>
+      <td><span class="badge" style="background:${col}22;color:${col}">${e.project}</span></td>
+      <td>${e.start}</td><td>${e.end}</td>
+      <td>${minToHM(timeToMin(e.end)-timeToMin(e.start))}</td>
+      <td style="color:var(--text2)">${e.note}</td>
+    </tr>`;
   }).join('');
   const tot=entries.reduce((s,e)=>s+timeToMin(e.end)-timeToMin(e.start),0);
   document.getElementById('wstat-entries').textContent=entries.length;
